@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlackAce ♠ Equity Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #0A0A0A;
+    color: #F0EDE6;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 28px 80px;
+  }
+  .label {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    color: #F0EDE6;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .body-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #A8A49C;
+    line-height: 1.75;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: #1C1C1C;
+    padding: 24px 26px;
+    margin-bottom: 2px;
+  }
+  .btn {
+    background: #C9A84C;
+    color: #0A0A0A;
+    border: none;
+    padding: 12px 28px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn:hover { background: #D4B85A; }
+  .btn-ghost {
+    background: transparent;
+    color: #C9A84C;
+    border: 1px solid #C9A84C;
+    padding: 11px 24px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-ghost:hover { background: rgba(201,168,76,0.08); }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  input[type="text"] {
+    background: #141414;
+    border: 1px solid #2C2C2C;
+    color: #F0EDE6;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    outline: none;
+  }
+  input[type="text"]:focus { border-color: #C9A84C; }
+  input[type="range"] {
+    width: 100%;
+    appearance: none;
+    height: 3px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #C9A84C;
+    cursor: pointer;
+    border: 2px solid #0A0A0A;
+    box-shadow: 0 0 0 1px #C9A84C;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #C9A84C;
+    cursor: pointer;
+    border: 2px solid #0A0A0A;
+  }
+  .rule { border: none; border-top: 1px solid #2C2C2C; margin: 32px 0; }
+  .progress-bar { background: #1C1C1C; height: 3px; width: 100%; margin-bottom: 40px; }
+  .progress-fill { background: #C9A84C; height: 100%; transition: width 0.4s ease; }
+  .highlight { color: #C9A84C; }
+  .dim-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #1C1C1C; }
+  .dim-row:last-child { border-bottom: none; }
+  .gold-left { background: #1C1C1C; border-left: 3px solid #C9A84C; padding: 20px 22px; margin-bottom: 32px; }
+  .score-dots { display: flex; gap: 6px; margin-bottom: 32px; flex-wrap: wrap; }
+  .dot {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600;
+    cursor: pointer; border: 1px solid #2C2C2C;
+    background: #141414; color: #6A6660;
+    transition: background 0.15s;
+  }
+  .dot.active { background: #C9A84C; color: #0A0A0A; border-color: #C9A84C; }
+  .dot.touched { background: #2C2C2C; }
+  .score-display {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 700;
+    color: #C9A84C; line-height: 1;
+  }
+  .score-label { font-size: 12px; color: #C9A84C; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .score-sub { font-size: 12px; color: #6A6660; }
+  .dim-context {
+    font-size: 12px; color: #6A6660; line-height: 1.6;
+    font-style: italic; margin-bottom: 20px;
+    border-left: 2px solid #2C2C2C; padding-left: 12px;
+  }
+  .dim-desc { font-size: 13px; color: #A8A49C; line-height: 1.6; margin-bottom: 6px; }
+  .result-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .result-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .result-pct { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; }
+  .breakdown-row { padding: 14px 0; border-bottom: 1px solid #1C1C1C; }
+  .breakdown-row:last-child { border-bottom: none; }
+  .bar-wrap { flex: 1; height: 4px; background: #141414; position: relative; }
+  .bar-f1 { position: absolute; left: 0; height: 100%; background: #C9A84C; opacity: 0.7; }
+  .bar-f2 { position: absolute; left: 0; top: 6px; height: 4px; background: #444; }
+  .step-item { background: #1C1C1C; padding: 14px 18px; display: flex; gap: 14px; margin-bottom: 2px; }
+  .step-num { color: #C9A84C; font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+  .step-text { font-size: 13px; color: #A8A49C; line-height: 1.6; }
+  .footer-note { margin-top: 60px; text-align: center; font-size: 11px; color: #3A3A3A; letter-spacing: 0.22em; text-transform: uppercase; }
+  .input-label { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: #C9A84C; font-weight: 500; margin-bottom: 8px; display: block; }
+  .slider-hints { display: flex; justify-content: space-between; font-size: 11px; color: #6A6660; margin-top: 6px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  @media (max-width: 600px) {
+    .pie-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 0: INTRO -->
+<div id="screen-0" class="screen active">
+  <div class="inner">
+    <span class="label">BlackAce ♠ Internal Tool</span>
+    <div class="heading">Equity Distribution<br>Calculator</div>
+    <p class="body-text">
+      This tool calculates a fair, responsibility-weighted equity split between the two BlackAce co-founders.
+      It is based on seven dimensions of contribution, each weighted by its importance to BlackAce's
+      institutional success. Both founders score independently, then compare.
+    </p>
+    <div style="margin-bottom:32px;">
+      <div class="dim-row"><span style="font-size:14px;color:#F0EDE6;">Capital Contributed</span><span style="font-size:12px;color:#C9A84C;font-weight:600;">15%</span></div>
+      <div class="dim-row"><span style="font-size:14px;color:#F0EDE6;">Opportunity Cost</span><span style="font-size:12px;color:#C9A84C;font-weight:600;">15%</span></div>
+      <div class="dim-row"><span style="font-size:14px;color:#F0EDE6;">Operational Role & Time Commitment</span><span style="font-size:12px;color:#C9A84C;font-weight:600;">20%</span></div>
+      <div class="dim-row"><span style="font-size:14px;color:#F0EDE6;">Skills & Domain Expertise</span><span style="font-size:12px;color:#C9A84C;font-weight:600;">15%</span></div>
+      <div class="dim-row"><span style="font-size:14px;color:#F0EDE6;">Network & Relationships</span><span style="font-size:12px;color:#C9A84C;font-weight:600;">20%</span></div>
+      <div class="dim-row"><span style="font-size:14px;color:#F0EDE6;">Reputational Collateral</span><span style="font-size:12px;color:#C9A84C;font-weight:600;">10%</span></div>
+      <div class="dim-row"><span style="font-size:14px;color:#F0EDE6;">Idea & Origination</span><span style="font-size:12px;color:#C9A84C;font-weight:600;">5%</span></div>
+    </div>
+    <div class="gold-left">
+      <p style="font-size:13px;color:#A8A49C;line-height:1.7;margin:0;">
+        Each dimension is scored 1–10 by each founder independently. The weighted average produces
+        a ratio. An ESOP pool is carved out first. The remainder is split by the ratio.
+        <strong style="color:#F0EDE6;"> This is a starting point for an honest conversation — not a legally binding document.</strong>
+      </p>
+    </div>
+    <button class="btn" onclick="goTo(1)">Begin the Assessment →</button>
+  </div>
+</div>
+
+<!-- SCREEN 1: SETUP -->
+<div id="screen-1" class="screen">
+  <div class="inner">
+    <span class="label">Step 1 of 3 · Setup</span>
+    <div class="heading">Name the Founders &<br>Set the ESOP Pool</div>
+    <div style="margin-bottom:28px;">
+      <label class="input-label">Founder 1 — India</label>
+      <input type="text" id="f1name" value="Managing Partner India" placeholder="e.g. Managing Partner India">
+    </div>
+    <div style="margin-bottom:36px;">
+      <label class="input-label">Founder 2 — USA</label>
+      <input type="text" id="f2name" value="Managing Partner USA" placeholder="e.g. Managing Partner USA">
+    </div>
+    <hr class="rule">
+    <span class="label">ESOP Pool — <span id="esop-display">10</span>%</span>
+    <p style="font-size:13px;color:#A8A49C;margin-bottom:16px;line-height:1.6;">
+      Equity reserved for future key hires — Vertical Heads, Senior Legal Counsel, strategic talent.
+      Recommended: 10–15%. Carved out before the founder split is calculated.
+    </p>
+    <input type="range" id="esop-slider" min="5" max="20" value="10" oninput="updateEsop(this.value)" style="background:linear-gradient(to right,#C9A84C 33.3%,#2C2C2C 33.3%);">
+    <div class="slider-hints" style="margin-bottom:32px;">
+      <span>5% (minimal)</span><span id="esop-mid" style="color:#C9A84C;">10% ESOP</span><span>20% (generous)</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="goTo(0)">← Back</button>
+      <button class="btn" onclick="startScoring()">Start Scoring →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: SCORING -->
+<div id="screen-2" class="screen">
+  <div class="inner">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <span class="label" id="scoring-label">Scoring: Founder 1 · Dimension 1 of 7 · Round 1 of 2</span>
+    <div class="heading" id="dim-title">Capital Contributed</div>
+    <p class="dim-desc" id="dim-desc"></p>
+    <p class="dim-context" id="dim-context"></p>
+    <div style="background:#141414;padding:2px;margin-bottom:24px;">
+      <div class="card">
+        <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:20px;">
+          <div class="score-display" id="score-display">5</div>
+          <div style="padding-bottom:10px;">
+            <div class="score-label" id="score-label">Moderate</div>
+            <div class="score-sub" id="score-sub">out of 10 · Weight: 15%</div>
+          </div>
+        </div>
+        <input type="range" id="score-slider" min="1" max="10" value="5" oninput="updateScore(this.value)" style="background:linear-gradient(to right,#C9A84C 44.4%,#2C2C2C 44.4%);">
+        <div class="slider-hints"><span>1 — Minimal</span><span>5 — Moderate</span><span>10 — Exceptional</span></div>
+      </div>
+    </div>
+    <div class="score-dots" id="score-dots"></div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="prevDim()">← Back</button>
+      <button class="btn" id="next-btn" onclick="nextDim()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: RESULTS -->
+<div id="screen-3" class="screen">
+  <div class="inner">
+    <span class="label">BlackAce ♠ · Equity Assessment Results</span>
+    <div class="heading">Your Suggested<br>Equity Distribution</div>
+    <div style="display:flex;gap:40px;align-items:center;flex-wrap:wrap;margin-bottom:40px;" class="pie-row">
+      <svg id="pie-svg" viewBox="0 0 180 180" width="180" height="180" style="filter:drop-shadow(0 0 16px rgba(201,168,76,0.2));flex-shrink:0;"></svg>
+      <div style="flex:1;min-width:200px;" id="legend"></div>
+    </div>
+    <div class="gold-left">
+      <span class="label">Interpretation</span>
+      <p style="font-size:14px;color:#A8A49C;line-height:1.7;margin:0;" id="interpretation"></p>
+    </div>
+    <span class="label">Dimension Breakdown</span>
+    <div id="breakdown" style="margin-bottom:32px;"></div>
+    <span class="label">Next Steps</span>
+    <div id="next-steps" style="margin-bottom:40px;"></div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="rescore()">← Rescore</button>
+      <button class="btn" onclick="restart()">Start Over</button>
+    </div>
+    <div class="footer-note">BlackAce ♠ · Internal Use Only · Confidential</div>
+  </div>
+</div>
+
+<script>
+const DIMENSIONS = [
+  {
+    id:"capital", label:"Capital Contributed", weight:15,
+    description:"Who is putting in money, assets or resources to start BlackAce? How much, and in what form?",
+    context:"Consider cash investment, foregone salary, office space, legal costs, or any tangible resource contributed to get BlackAce operational."
+  },
+  {
+    id:"opportunity", label:"Opportunity Cost", weight:15,
+    description:"What is each founder giving up to build BlackAce?",
+    context:"Factor in seniority of role left behind, income foregone, and whether the founder has other active income sources (e.g. eRAI). A founder with no other income source carries a higher opportunity cost."
+  },
+  {
+    id:"operations", label:"Operational Role & Time Commitment", weight:20,
+    description:"How many hours per week is each founder dedicating exclusively to BlackAce?",
+    context:"This is the highest-weighted dimension. Full-time, on-the-ground operational burden — including India entity setup, client delivery, team management and day-to-day decisions — scores highest."
+  },
+  {
+    id:"skills", label:"Skills & Domain Expertise", weight:15,
+    description:"What unique, hard-to-replace expertise does each founder bring to BlackAce's three verticals?",
+    context:"Assess across Finance & Strategy, Infrastructure & Energy, and Emerging Technology. Consider how easily BlackAce could hire someone to replace this expertise externally."
+  },
+  {
+    id:"network", label:"Network & Relationships", weight:20,
+    description:"Whose relationships are generating the early pipeline and opening institutional doors?",
+    context:"Consider government contacts (India, US, Germany, Morocco), financial institution relationships, infrastructure sector contacts, and defence/policy networks. This is the second-highest-weighted dimension as it directly drives BlackAce's early revenue."
+  },
+  {
+    id:"reputation", label:"Reputational Collateral", weight:10,
+    description:"Whose name and credibility is being publicly put on the line for BlackAce?",
+    context:"If BlackAce fails, whose career, institutional standing and long-term reputation takes the larger hit? Consider recognition by the governments of India, US, Germany and Morocco."
+  },
+  {
+    id:"origination", label:"Idea & Origination", weight:5,
+    description:"Who conceived of BlackAce and developed the initial vision, structure and direction?",
+    context:"Whose thinking shaped the institution — the three verticals, the India-US structure, the eRAI relationship, the long-term vision? This is weighted lowest as ideas matter less than execution over time."
+  }
+];
+
+let state = {
+  f1Name: "Managing Partner India",
+  f2Name: "Managing Partner USA",
+  esop: 10,
+  scores: { f1: {}, f2: {} },
+  activeDim: 0,
+  founder: "f1"
+};
+
+DIMENSIONS.forEach(d => { state.scores.f1[d.id] = 5; state.scores.f2[d.id] = 5; });
+
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + n).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function updateEsop(v) {
+  state.esop = parseInt(v);
+  document.getElementById('esop-display').textContent = v;
+  document.getElementById('esop-mid').textContent = v + '% ESOP';
+  const pct = (v - 5) / 15 * 100;
+  document.getElementById('esop-slider').style.background = `linear-gradient(to right,#C9A84C ${pct}%,#2C2C2C ${pct}%)`;
+}
+
+function startScoring() {
+  state.f1Name = document.getElementById('f1name').value || "Managing Partner India";
+  state.f2Name = document.getElementById('f2name').value || "Managing Partner USA";
+  state.activeDim = 0;
+  state.founder = "f1";
+  goTo(2);
+  renderScoring();
+}
+
+function scoreLabel(v) {
+  if (v <= 2) return "Minimal";
+  if (v <= 4) return "Below Average";
+  if (v <= 6) return "Moderate";
+  if (v <= 8) return "Strong";
+  return "Exceptional";
+}
+
+function renderScoring() {
+  const d = DIMENSIONS[state.activeDim];
+  const fName = state.founder === "f1" ? state.f1Name : state.f2Name;
+  const totalDims = DIMENSIONS.length;
+  const round = state.founder === "f1" ? "Round 1 of 2" : "Round 2 of 2";
+  const dimNum = state.activeDim + 1;
+
+  const overallPct = state.founder === "f1"
+    ? (state.activeDim / (totalDims * 2)) * 100
+    : (50 + state.activeDim / (totalDims * 2) * 100);
+
+  document.getElementById('progress-fill').style.width = overallPct + '%';
+  document.getElementById('scoring-label').innerHTML =
+    `Scoring: <span style="color:#F0EDE6">${fName}</span> &nbsp;·&nbsp; Dimension ${dimNum} of ${totalDims} &nbsp;·&nbsp; ${round}`;
+  document.getElementById('dim-title').textContent = d.label;
+  document.getElementById('dim-desc').textContent = d.description;
+  document.getElementById('dim-context').textContent = d.context;
+  document.getElementById('score-sub').textContent = `out of 10 · Weight: ${d.weight}%`;
+
+  const val = state.scores[state.founder][d.id];
+  const slider = document.getElementById('score-slider');
+  slider.value = val;
+  updateScoreDisplay(val);
+
+  const isLast = state.activeDim === totalDims - 1;
+  const nextBtn = document.getElementById('next-btn');
+  if (isLast && state.founder === "f2") nextBtn.textContent = "See Results →";
+  else if (isLast) nextBtn.textContent = `Score ${state.f2Name} →`;
+  else nextBtn.textContent = "Next →";
+
+  renderDots();
+}
+
+function updateScore(v) {
+  const d = DIMENSIONS[state.activeDim];
+  state.scores[state.founder][d.id] = parseInt(v);
+  updateScoreDisplay(parseInt(v));
+  renderDots();
+}
+
+function updateScoreDisplay(v) {
+  document.getElementById('score-display').textContent = v;
+  document.getElementById('score-label').textContent = scoreLabel(v);
+  const pct = (v - 1) / 9 * 100;
+  document.getElementById('score-slider').style.background =
+    `linear-gradient(to right,#C9A84C ${pct}%,#2C2C2C ${pct}%)`;
+}
+
+function renderDots() {
+  const container = document.getElementById('score-dots');
+  container.innerHTML = '';
+  DIMENSIONS.forEach((d, i) => {
+    const val = state.scores[state.founder][d.id];
+    const isActive = i === state.activeDim;
+    const isTouched = val !== 5;
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (isActive ? ' active' : isTouched ? ' touched' : '');
+    dot.textContent = val;
+    dot.onclick = () => { state.activeDim = i; renderScoring(); };
+    container.appendChild(dot);
+  });
+}
+
+function nextDim() {
+  const isLast = state.activeDim === DIMENSIONS.length - 1;
+  if (!isLast) {
+    state.activeDim++;
+    renderScoring();
+  } else if (state.founder === "f1") {
+    state.founder = "f2";
+    state.activeDim = 0;
+    renderScoring();
+  } else {
+    showResults();
+  }
+}
+
+function prevDim() {
+  if (state.activeDim > 0) {
+    state.activeDim--;
+    renderScoring();
+  } else if (state.founder === "f2") {
+    state.founder = "f1";
+    state.activeDim = DIMENSIONS.length - 1;
+    renderScoring();
+  }
+}
+
+function calcWeighted(founder) {
+  return DIMENSIONS.reduce((sum, d) => sum + (state.scores[founder][d.id] * d.weight / 10), 0);
+}
+
+function drawPie(f1Pct, f2Pct, esopPct, f1Name, f2Name) {
+  const svg = document.getElementById('pie-svg');
+  const size = 180, cx = 90, cy = 90, r = 75, ir = 38;
+
+  function polarToXY(pct, offset, radius) {
+    const angle = (pct / 100) * 2 * Math.PI + offset - Math.PI / 2;
+    return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+  }
+
+  function makePath(startPct, endPct, color) {
+    if (endPct - startPct <= 0) return '';
+    const offset = 0;
+    const [x1, y1] = polarToXY(startPct, offset, r);
+    const [x2, y2] = polarToXY(endPct, offset, r);
+    const [ix1, iy1] = polarToXY(startPct, offset, ir);
+    const [ix2, iy2] = polarToXY(endPct, offset, ir);
+    const large = (endPct - startPct) > 50 ? 1 : 0;
+    return `<path d="M ${ix1} ${iy1} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} L ${ix2} ${iy2} A ${ir} ${ir} 0 ${large} 0 ${ix1} ${iy1} Z" fill="${color}"/>`;
+  }
+
+  const shortF1 = f1Name.split(' ').pop();
+  svg.innerHTML =
+    makePath(0, f1Pct, '#C9A84C') +
+    makePath(f1Pct, f1Pct + f2Pct, '#2A2A2A') +
+    makePath(f1Pct + f2Pct, 100, '#3A2E0A') +
+    `<circle cx="${cx}" cy="${cy}" r="${ir}" fill="#0A0A0A"/>` +
+    `<text x="${cx}" y="${cy - 8}" text-anchor="middle" fill="#C9A84C" font-size="7.5" font-family="'Cormorant Garamond',serif" font-weight="600">${shortF1}</text>` +
+    `<text x="${cx}" y="${cy + 5}" text-anchor="middle" fill="#C9A84C" font-size="13" font-family="'Cormorant Garamond',serif" font-weight="700">${f1Pct.toFixed(1)}%</text>` +
+    `<text x="${cx}" y="${cy + 16}" text-anchor="middle" fill="#555" font-size="7" font-family="'Cormorant Garamond',serif">${f2Pct.toFixed(1)}% · ${esopPct}%</text>`;
+}
+
+function showResults() {
+  const rawF1 = calcWeighted("f1");
+  const rawF2 = calcWeighted("f2");
+  const total = rawF1 + rawF2;
+  const available = 100 - state.esop;
+  const f1Pct = total > 0 ? (rawF1 / total) * available : available / 2;
+  const f2Pct = total > 0 ? (rawF2 / total) * available : available / 2;
+  const gap = Math.abs(f1Pct - f2Pct);
+
+  goTo(3);
+
+  drawPie(f1Pct, f2Pct, state.esop, state.f1Name, state.f2Name);
+
+  // Legend
+  const legendData = [
+    { name: state.f1Name, pct: f1Pct, color: '#C9A84C' },
+    { name: state.f2Name, pct: f2Pct, color: '#3A3A3A' },
+    { name: 'ESOP Pool', pct: state.esop, color: '#3A2E0A' }
+  ];
+  document.getElementById('legend').innerHTML = legendData.map(item => `
+    <div class="result-row">
+      <div class="result-dot" style="background:${item.color}"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;color:#F0EDE6;font-weight:500;">${item.name}</div>
+        <div style="font-size:11px;color:#A8A49C;">${item.pct.toFixed(1)}% equity</div>
+      </div>
+      <div class="result-pct" style="color:${item.color}">${item.pct.toFixed(1)}%</div>
+    </div>
+  `).join('');
+
+  // Interpretation
+  let interp;
+  if (gap < 5) interp = "The scores suggest an essentially equal partnership. A 50/50 split with an ESOP carve-out is well justified.";
+  else if (gap < 15) interp = "A modest but meaningful difference. Consider whether the higher-scoring founder's greater contribution is structural and long-term, or front-loaded in the early phase.";
+  else interp = "A significant difference exists. This warrants an honest conversation about whether the split reflects the long-term picture or just the current phase. Consider a vesting schedule to manage this carefully.";
+  document.getElementById('interpretation').textContent = interp;
+
+  // Breakdown
+  const f1Short = state.f1Name.split(' ').pop();
+  const f2Short = state.f2Name.split(' ').pop();
+  document.getElementById('breakdown').innerHTML = DIMENSIONS.map(d => {
+    const s1 = state.scores.f1[d.id];
+    const s2 = state.scores.f2[d.id];
+    const diff = s1 - s2;
+    return `
+      <div class="breakdown-row">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="font-size:13px;color:#F0EDE6;">${d.label}</span>
+          <span style="font-size:11px;color:#6A6660;">weight: ${d.weight}%</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <span style="font-size:11px;color:#C9A84C;width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f1Short}: ${s1}/10</span>
+          <div class="bar-wrap">
+            <div class="bar-f1" style="width:${s1*10}%"></div>
+            <div class="bar-f2" style="width:${s2*10}%"></div>
+          </div>
+          <span style="font-size:11px;color:#A8A49C;width:100px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f2Short}: ${s2}/10</span>
+        </div>
+        ${diff !== 0 ? `<div style="font-size:11px;color:${diff>0?'#C9A84C':'#7A5A1E'};margin-top:6px;font-style:italic;">
+          ${diff > 0 ? `${f1Short} scores ${Math.abs(diff)} point${Math.abs(diff)>1?'s':''} higher` : `${f2Short} scores ${Math.abs(diff)} point${Math.abs(diff)>1?'s':''} higher`}
+        </div>` : ''}
+      </div>`;
+  }).join('');
+
+  // Next steps
+  const steps = [
+    "Both founders complete this assessment independently, without discussing scores first.",
+    "Compare results. Where scores diverge significantly, have a structured conversation about why.",
+    "Apply a 4-year vesting schedule with a 1-year cliff to both founders' equity.",
+    "Finalise the ESOP pool percentage and identify the first 2–3 roles it will be used for.",
+    "Have a corporate lawyer draft the Shareholders' Agreement and Founders' Operating Agreement.",
+    "Set a Year 2 review date to reassess whether roles and contributions have shifted."
+  ];
+  document.getElementById('next-steps').innerHTML = steps.map((s, i) => `
+    <div class="step-item">
+      <span class="step-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="step-text">${s}</span>
+    </div>
+  `).join('');
+}
+
+function rescore() {
+  state.activeDim = 0;
+  state.founder = "f1";
+  goTo(2);
+  renderScoring();
+}
+
+function restart() {
+  DIMENSIONS.forEach(d => { state.scores.f1[d.id] = 5; state.scores.f2[d.id] = 5; });
+  state.activeDim = 0;
+  state.founder = "f1";
+  state.esop = 10;
+  goTo(0);
+}
+</script>
+</body>
+</html>
