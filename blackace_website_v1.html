@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlackAce — Strategic Institution</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & ROOT ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+:root {
+  --black:    #08080A;
+  --surface:  #111113;
+  --card:     #18181B;
+  --gold:     #C9A84C;
+  --gold2:    #A07C2E;
+  --gold3:    #E8C97A;
+  --white:    #F0EDE6;
+  --grey:     #A8A49C;
+  --muted:    #6A6660;
+  --divider:  #2C2C28;
+  --nav-h:    72px;
+}
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── UTILITY ── */
+.serif { font-family: 'Cormorant Garamond', serif; }
+.gold { color: var(--gold); }
+.grey { color: var(--grey); }
+.label {
+  font-size: 10px; letter-spacing: 0.32em;
+  text-transform: uppercase; color: var(--gold);
+  font-weight: 500; display: block; margin-bottom: 14px;
+}
+.rule { border: none; border-top: 1px solid var(--divider); margin: 56px 0; }
+.btn-gold {
+  display: inline-block; background: var(--gold); color: var(--black);
+  padding: 13px 32px; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer;
+  border: none; font-family: 'Inter', sans-serif; text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-gold:hover { background: var(--gold3); }
+.btn-ghost {
+  display: inline-block; background: transparent; color: var(--gold);
+  padding: 12px 30px; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer;
+  border: 1px solid var(--gold); font-family: 'Inter', sans-serif;
+  text-decoration: none; transition: all 0.2s;
+}
+.btn-ghost:hover { background: rgba(201,168,76,0.08); }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+.container-sm { max-width: 860px; margin: 0 auto; padding: 0 48px; }
+@media(max-width:768px){ .container,.container-sm { padding: 0 24px; } }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h); background: rgba(8,8,10,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--divider);
+  display: flex; align-items: center;
+}
+.nav-inner {
+  width: 100%; max-width: 1400px; margin: 0 auto;
+  padding: 0 48px; display: flex; align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--white); cursor: pointer; text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; align-items: center; gap: 36px; }
+.nav-link {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--grey);
+  cursor: pointer; text-decoration: none;
+  transition: color 0.2s; border: none; background: none;
+  font-family: 'Inter', sans-serif; padding: 0;
+  position: relative;
+}
+.nav-link:hover, .nav-link.active { color: var(--white); }
+.nav-link.active::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--gold);
+}
+.nav-dropdown { position: relative; }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 24px); left: -20px;
+  background: var(--surface); border: 1px solid var(--divider);
+  min-width: 220px; padding: 8px 0;
+  display: none; z-index: 100;
+}
+.nav-dropdown:hover .nav-dropdown-menu { display: block; }
+.nav-dropdown-item {
+  display: block; padding: 10px 24px;
+  font-size: 11px; color: var(--grey); letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+  border: none; background: none; font-family: 'Inter', sans-serif;
+  width: 100%; text-align: left;
+}
+.nav-dropdown-item:hover { color: var(--white); background: var(--card); }
+.nav-cta {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--black);
+  background: var(--gold); padding: 10px 22px; cursor: pointer;
+  text-decoration: none; transition: background 0.2s;
+  border: none; font-family: 'Inter', sans-serif;
+}
+.nav-cta:hover { background: var(--gold3); }
+.nav-mobile-toggle {
+  display: none; background: none; border: none;
+  color: var(--white); font-size: 20px; cursor: pointer; padding: 4px;
+}
+@media(max-width:900px){
+  .nav-links { display: none; }
+  .nav-mobile-toggle { display: block; }
+}
+
+/* ── PAGES ── */
+.page { display: none; padding-top: var(--nav-h); min-height: 100vh; }
+.page.active { display: block; }
+
+/* ── HERO ── */
+.hero {
+  position: relative; min-height: calc(100vh - var(--nav-h));
+  display: flex; align-items: center;
+  overflow: hidden; background: var(--black);
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(201,168,76,0.05) 0%, transparent 70%);
+}
+.hero-grid-lines {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-content { position: relative; z-index: 2; padding: 80px 0; }
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 32px;
+}
+.hero-eyebrow-line { width: 40px; height: 1px; background: var(--gold); opacity: 0.6; }
+.hero-eyebrow-text {
+  font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--gold); font-weight: 500;
+}
+.hero-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 7vw, 96px);
+  font-weight: 300; line-height: 1.05;
+  color: var(--white); margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+.hero-heading em {
+  font-style: italic; color: var(--gold);
+}
+.hero-sub {
+  font-size: 16px; color: var(--grey); max-width: 540px;
+  line-height: 1.75; margin-bottom: 48px; font-weight: 300;
+}
+.hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero-scroll-hint {
+  position: absolute; bottom: 40px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 9px; letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.hero-scroll-line {
+  width: 1px; height: 48px; background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ── TICKER / STATS BAR ── */
+.stats-bar {
+  background: var(--surface); border-top: 1px solid var(--divider);
+  border-bottom: 1px solid var(--divider); padding: 0;
+  overflow: hidden;
+}
+.stats-track {
+  display: flex; gap: 0;
+}
+.stat-item {
+  flex: 1; padding: 28px 40px;
+  border-right: 1px solid var(--divider);
+  text-align: center; min-width: 200px;
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 44px; font-weight: 600; color: var(--gold);
+  line-height: 1; margin-bottom: 6px; display: block;
+}
+.stat-label {
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--grey); font-weight: 500;
+}
+.stat-note { font-size: 9px; color: var(--muted); margin-top: 4px; }
+
+/* ── SECTION HEADERS ── */
+.section-header { margin-bottom: 56px; }
+.section-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 400; color: var(--white); line-height: 1.1;
+}
+.section-heading em { font-style: italic; color: var(--gold); }
+.section-body {
+  font-size: 16px; color: var(--grey); line-height: 1.8;
+  max-width: 640px; margin-top: 20px;
+}
+
+/* ── ABOUT STRIP ── */
+.about-strip { padding: 100px 0; }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+}
+@media(max-width:768px){ .about-grid { grid-template-columns: 1fr; gap: 40px; } }
+.about-statement {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 400; font-style: italic;
+  color: var(--white); line-height: 1.5;
+  border-left: 3px solid var(--gold);
+  padding-left: 32px;
+}
+.about-statement em { font-style: normal; color: var(--gold); font-weight: 600; }
+.about-pillars { display: flex; flex-direction: column; gap: 2px; }
+.pillar {
+  background: var(--card); padding: 20px 24px;
+  display: flex; align-items: center; gap: 20px;
+  transition: background 0.2s;
+}
+.pillar:hover { background: #222; }
+.pillar-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px; font-weight: 300; color: var(--gold);
+  opacity: 0.4; flex-shrink: 0; width: 36px;
+}
+.pillar-text { font-size: 13px; color: var(--grey); font-weight: 400; }
+.pillar-text strong { color: var(--white); display: block; font-size: 14px; margin-bottom: 2px; }
+
+/* ── VERTICALS SECTION ── */
+.verticals-section { padding: 100px 0; background: var(--surface); }
+.verticals-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; margin-top: 48px;
+}
+@media(max-width:900px){ .verticals-grid { grid-template-columns: 1fr; } }
+.vertical-card {
+  background: var(--card); padding: 48px 36px;
+  position: relative; overflow: hidden;
+  cursor: pointer; transition: background 0.25s;
+  min-height: 360px; display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+.vertical-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 3px; height: 0; background: var(--gold);
+  transition: height 0.4s ease;
+}
+.vertical-card:hover::before { height: 100%; }
+.vertical-card:hover { background: #1E1E1E; }
+.vertical-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 72px; font-weight: 300; color: var(--gold);
+  opacity: 0.08; position: absolute; top: 16px; right: 24px;
+  line-height: 1;
+}
+.vertical-label { margin-bottom: 20px; }
+.vertical-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 600;
+  color: var(--white); margin-bottom: 16px; line-height: 1.2;
+}
+.vertical-desc { font-size: 13px; color: var(--grey); line-height: 1.7; margin-bottom: 32px; }
+.vertical-practices { display: flex; flex-direction: column; gap: 6px; margin-bottom: 32px; }
+.vertical-practice {
+  font-size: 11px; color: var(--muted); letter-spacing: 0.06em;
+  display: flex; align-items: center; gap: 8px;
+}
+.vertical-practice::before { content: '—'; color: var(--gold); opacity: 0.5; }
+.vertical-arrow {
+  font-size: 11px; color: var(--gold); letter-spacing: 0.14em;
+  text-transform: uppercase; font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+  opacity: 0; transition: opacity 0.25s; margin-top: auto;
+}
+.vertical-card:hover .vertical-arrow { opacity: 1; }
+
+/* ── AI STACK ── */
+.aistack-section { padding: 100px 0; }
+.aistack-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: start; margin-top: 48px;
+}
+@media(max-width:768px){ .aistack-grid { grid-template-columns: 1fr; } }
+.stack-visual {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.stack-layer {
+  padding: 24px 28px; display: flex; gap: 20px;
+  align-items: center; transition: background 0.2s;
+}
+.stack-layer.ours { background: var(--card); border-left: 3px solid var(--gold); }
+.stack-layer.not-ours { background: #0F0F11; border-left: 3px solid transparent; opacity: 0.6; }
+.stack-layer-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 300; color: var(--gold); flex-shrink: 0;
+  line-height: 1;
+}
+.stack-layer-title {
+  font-size: 13px; font-weight: 500; color: var(--white);
+  letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;
+}
+.stack-layer-desc { font-size: 12px; color: var(--grey); line-height: 1.5; }
+.stack-badge {
+  display: inline-block; margin-top: 8px; padding: 3px 10px;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; border: 1px solid var(--gold); color: var(--gold);
+}
+.stack-badge.muted { border-color: #333; color: var(--muted); }
+.aistack-copy h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 400; color: var(--white);
+  margin-bottom: 20px; line-height: 1.3;
+}
+.aistack-copy p { font-size: 15px; color: var(--grey); line-height: 1.8; margin-bottom: 20px; }
+
+/* ── ROADMAP ── */
+.roadmap-section { padding: 100px 0; background: var(--surface); }
+.roadmap-cards {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 2px; margin-top: 48px;
+}
+@media(max-width:1000px){ .roadmap-cards { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:600px){ .roadmap-cards { grid-template-columns: 1fr; } }
+.roadmap-card {
+  background: var(--card); padding: 36px 28px;
+  position: relative; overflow: hidden;
+}
+.roadmap-card::after {
+  content: attr(data-track);
+  position: absolute; bottom: -12px; right: -8px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 100px; font-weight: 700; color: var(--gold);
+  opacity: 0.04; line-height: 1; pointer-events: none;
+}
+.roadmap-track {
+  font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 16px;
+}
+.roadmap-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 600; color: var(--white);
+  line-height: 1.25; margin-bottom: 16px;
+}
+.roadmap-desc { font-size: 12px; color: var(--grey); line-height: 1.65; }
+
+/* ── FOUNDERS SECTION ── */
+.founders-section { padding: 100px 0; }
+.founders-intro {
+  background: var(--card); border-left: 3px solid var(--gold);
+  padding: 36px 40px; margin-bottom: 56px;
+}
+.founders-intro p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 2vw, 20px); font-weight: 400;
+  font-style: italic; color: var(--grey); line-height: 1.8;
+}
+.founders-intro p strong { color: var(--white); font-style: normal; }
+.founders-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+@media(max-width:700px){ .founders-grid { grid-template-columns: 1fr; } }
+.founder-card {
+  background: var(--card); padding: 44px 36px;
+  position: relative; overflow: hidden;
+}
+.founder-photo {
+  width: 80px; height: 80px; background: var(--surface);
+  border: 1px solid var(--divider); margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.founder-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 600; color: var(--white);
+  margin-bottom: 4px;
+}
+.founder-title { font-size: 11px; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 20px; }
+.founder-bio { font-size: 13px; color: var(--grey); line-height: 1.75; margin-bottom: 24px; }
+.founder-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.founder-tag {
+  font-size: 10px; color: var(--muted); border: 1px solid var(--divider);
+  padding: 3px 10px; letter-spacing: 0.08em;
+}
+.founder-geo {
+  position: absolute; top: 36px; right: 36px;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted);
+}
+.founder-geo::before { content: '♠ '; color: var(--gold); opacity: 0.5; }
+
+/* ── STRUCTURE SECTION ── */
+.structure-section { padding: 100px 0; background: var(--surface); }
+.structure-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: 2px; margin-top: 48px;
+}
+@media(max-width:700px){ .structure-grid { grid-template-columns: 1fr; } }
+.s-card {
+  background: var(--card); padding: 40px 36px;
+}
+.s-card-label { margin-bottom: 12px; }
+.s-card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 600; color: var(--white);
+  margin-bottom: 16px; line-height: 1.2;
+}
+.s-card p { font-size: 13px; color: var(--grey); line-height: 1.75; }
+.s-card p strong { color: var(--white); font-weight: 500; }
+
+/* ── INSIGHTS / NEWS ── */
+.insights-section { padding: 100px 0; }
+.insights-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2px; margin-top: 48px;
+}
+@media(max-width:900px){ .insights-grid { grid-template-columns: 1fr; } }
+.insight-card {
+  background: var(--card); padding: 36px 32px;
+  display: flex; flex-direction: column;
+  transition: background 0.2s; cursor: pointer;
+}
+.insight-card:hover { background: #1E1E1E; }
+.insight-cat {
+  font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 16px;
+}
+.insight-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 600; color: var(--white);
+  line-height: 1.25; margin-bottom: 16px; flex: 1;
+}
+.insight-excerpt { font-size: 13px; color: var(--grey); line-height: 1.65; margin-bottom: 24px; }
+.insight-date { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
+.insight-placeholder {
+  background: var(--surface); border: 1px dashed var(--divider);
+  height: 120px; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--muted); letter-spacing: 0.2em;
+  text-transform: uppercase; margin-bottom: 20px;
+}
+
+/* ── CONTACT / CTA STRIP ── */
+.contact-strip {
+  padding: 120px 0;
+  background: linear-gradient(135deg, var(--surface) 0%, #0F0F0F 100%);
+  position: relative; overflow: hidden;
+}
+.contact-strip::before {
+  content: '♠';
+  position: absolute; right: -40px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 480px; color: var(--gold); opacity: 0.02;
+  font-family: serif; pointer-events: none; line-height: 1;
+}
+.contact-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 300; color: var(--white);
+  line-height: 1.1; margin-bottom: 24px;
+}
+.contact-heading em { color: var(--gold); font-style: italic; }
+.contact-sub { font-size: 16px; color: var(--grey); margin-bottom: 48px; max-width: 500px; }
+.contact-form { display: flex; flex-direction: column; gap: 2px; max-width: 560px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.form-field input, .form-field textarea, .form-field select {
+  width: 100%; background: var(--card);
+  border: 1px solid var(--divider); border-top: none;
+  color: var(--white); padding: 14px 16px;
+  font-size: 13px; font-family: 'Inter', sans-serif;
+  outline: none; resize: none;
+}
+.form-field input::placeholder, .form-field textarea::placeholder { color: var(--muted); }
+.form-field input:focus, .form-field textarea:focus { border-color: var(--gold); }
+.form-field-label {
+  font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--gold); padding: 10px 16px 0;
+  background: var(--card); border: 1px solid var(--divider);
+  border-bottom: none; font-weight: 500;
+}
+.form-field { display: flex; flex-direction: column; }
+.contact-info { margin-top: 56px; display: flex; gap: 48px; flex-wrap: wrap; }
+.contact-info-item { }
+.contact-info-label {
+  font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--gold); font-weight: 500; margin-bottom: 6px;
+}
+.contact-info-value { font-size: 14px; color: var(--grey); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--surface); border-top: 1px solid var(--divider);
+  padding: 60px 0 40px;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px; margin-bottom: 48px;
+}
+@media(max-width:900px){ .footer-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:500px){ .footer-grid { grid-template-columns: 1fr; } }
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--white); margin-bottom: 16px;
+}
+.footer-logo span { color: var(--gold); }
+.footer-tagline { font-size: 12px; color: var(--muted); line-height: 1.6; max-width: 260px; }
+.footer-col h4 {
+  font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--gold); font-weight: 500; margin-bottom: 20px;
+}
+.footer-link {
+  display: block; font-size: 12px; color: var(--muted);
+  margin-bottom: 10px; cursor: pointer; text-decoration: none;
+  transition: color 0.15s; border: none; background: none;
+  font-family: 'Inter', sans-serif; text-align: left; padding: 0;
+}
+.footer-link:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid var(--divider); padding-top: 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-copy { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+.footer-spade { color: var(--gold); font-size: 18px; opacity: 0.4; }
+.footer-legal {
+  font-size: 10px; color: var(--muted); margin-top: 20px;
+  line-height: 1.7; border-top: 1px solid var(--divider); padding-top: 20px;
+}
+
+/* ── INNER PAGES ── */
+.page-hero {
+  padding: 80px 0 60px;
+  border-bottom: 1px solid var(--divider);
+  background: var(--surface);
+}
+.page-hero-label { margin-bottom: 16px; }
+.page-hero-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 300; color: var(--white); line-height: 1.05;
+}
+.page-hero-heading em { color: var(--gold); font-style: italic; }
+.page-hero-sub {
+  font-size: 16px; color: var(--grey); max-width: 600px;
+  line-height: 1.8; margin-top: 20px;
+}
+.inner-section { padding: 80px 0; }
+.inner-section + .inner-section { border-top: 1px solid var(--divider); }
+.inner-section.dark { background: var(--surface); }
+
+/* ── VERTICAL DETAIL PAGES ── */
+.vertical-hero-bar {
+  height: 4px; background: linear-gradient(to right, var(--gold), var(--gold2));
+}
+.practice-list { display: flex; flex-direction: column; gap: 2px; margin-top: 32px; }
+.practice-item {
+  background: var(--card); padding: 28px 32px;
+  display: flex; gap: 24px; align-items: flex-start;
+}
+.practice-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border: 1px solid var(--divider);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-size: 16px;
+}
+.practice-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600; color: var(--white);
+  margin-bottom: 6px;
+}
+.practice-desc { font-size: 13px; color: var(--grey); line-height: 1.7; }
+
+/* ── VISION PAGE ── */
+.vision-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 3.5vw, 38px);
+  font-weight: 300; font-style: italic;
+  color: var(--white); line-height: 1.4;
+  border-left: 3px solid var(--gold); padding-left: 36px;
+  margin: 48px 0;
+}
+.vision-quote em { font-style: normal; color: var(--gold); font-weight: 600; }
+.value-grid {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 2px;
+  margin-top: 32px;
+}
+@media(max-width:600px){ .value-grid { grid-template-columns: 1fr; } }
+.value-card {
+  background: var(--card); padding: 36px 32px;
+}
+.value-word {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 700; color: var(--gold);
+  margin-bottom: 12px; line-height: 1;
+}
+.value-desc { font-size: 13px; color: var(--grey); line-height: 1.7; }
+
+/* ── PLACEHOLDER ── */
+.placeholder {
+  background: var(--surface); border: 1px dashed #2A2A2A;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 60px 40px; text-align: center; gap: 12px;
+}
+.placeholder-label {
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--muted);
+}
+.placeholder-hint { font-size: 12px; color: #333; }
+
+/* ── ANIMATIONS ── */
+.fade-in { animation: fadeIn 0.6s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ── MOBILE NAV MENU ── */
+.mobile-menu {
+  display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
+  background: var(--surface); border-bottom: 1px solid var(--divider);
+  padding: 24px 28px; z-index: 999; flex-direction: column; gap: 4px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu-link {
+  font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--grey); padding: 12px 0; border-bottom: 1px solid var(--divider);
+  cursor: pointer; border-left: none; border-right: none;
+  background: none; font-family: 'Inter', sans-serif; text-align: left;
+}
+.mobile-menu-link:hover { color: var(--white); }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" onclick="showPage('home')" href="#">Black<span>Ace</span> ♠</a>
+    <div class="nav-links">
+      <div class="nav-dropdown">
+        <button class="nav-link" onclick="showPage('about')">The Firm</button>
+        <div class="nav-dropdown-menu">
+          <button class="nav-dropdown-item" onclick="showPage('about')">Overview</button>
+          <button class="nav-dropdown-item" onclick="showPage('vision')">Vision & Mission</button>
+          <button class="nav-dropdown-item" onclick="showPage('team')">Our Team</button>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-link" onclick="showPage('verticals')">What We Do</button>
+        <div class="nav-dropdown-menu">
+          <button class="nav-dropdown-item" onclick="showPage('finance')">Finance & Strategy</button>
+          <button class="nav-dropdown-item" onclick="showPage('infrastructure')">Infrastructure</button>
+          <button class="nav-dropdown-item" onclick="showPage('technology')">Emerging Technology</button>
+        </div>
+      </div>
+      <button class="nav-link" onclick="showPage('insights')">Insights</button>
+      <button class="nav-link" onclick="showPage('contact')">Contact</button>
+    </div>
+    <a class="nav-cta" onclick="showPage('contact')" href="#">Engage BlackAce</a>
+    <button class="nav-mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-link" onclick="showPage('about');toggleMobileMenu()">The Firm</button>
+  <button class="mobile-menu-link" onclick="showPage('vision');toggleMobileMenu()">Vision & Mission</button>
+  <button class="mobile-menu-link" onclick="showPage('team');toggleMobileMenu()">Our Team</button>
+  <button class="mobile-menu-link" onclick="showPage('finance');toggleMobileMenu()">Finance & Strategy</button>
+  <button class="mobile-menu-link" onclick="showPage('infrastructure');toggleMobileMenu()">Infrastructure</button>
+  <button class="mobile-menu-link" onclick="showPage('technology');toggleMobileMenu()">Emerging Technology</button>
+  <button class="mobile-menu-link" onclick="showPage('insights');toggleMobileMenu()">Insights</button>
+  <button class="mobile-menu-link" onclick="showPage('contact');toggleMobileMenu()">Contact</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: HOME
+════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="container hero-content fade-in">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <span class="hero-eyebrow-text">New Delhi · Washington D.C. · Founded 2026</span>
+      </div>
+      <h1 class="hero-heading">
+        Earned Trust.<br><em>Real Execution.</em>
+      </h1>
+      <p class="hero-sub">
+        BlackAce is a high-trust strategic institution solving complex problems at the intersection of capital, infrastructure, technology and sovereign affairs — across India and the United States.
+      </p>
+      <div class="hero-btns">
+        <a class="btn-gold" onclick="showPage('about')" href="#">The Firm</a>
+        <a class="btn-ghost" onclick="showPage('verticals')" href="#">What We Do</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="container" style="padding:0;">
+      <div class="stats-track">
+        <div class="stat-item">
+          <span class="stat-num">$9.3B</span>
+          <div class="stat-label">Institutional Capital Overseen</div>
+          <div class="stat-note">By founding partners, cumulative</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">3</span>
+          <div class="stat-label">Core Verticals</div>
+          <div class="stat-note">Finance · Infrastructure · Technology</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">4</span>
+          <div class="stat-label">Governments Recognising Founders</div>
+          <div class="stat-note">India · USA · Germany · Morocco</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">2</span>
+          <div class="stat-label">Countries of Operation</div>
+          <div class="stat-note">India (HQ) · United States</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT STRIP -->
+  <section class="about-strip">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <span class="label">The Institution</span>
+          <p class="about-statement">
+            We exist to bridge the gap between <em>vision and execution</em> — bringing together capital, strategy and long-term trust where institutions need it most.
+          </p>
+          <br>
+          <a class="btn-ghost" style="margin-top:24px;" onclick="showPage('about')" href="#">Learn More →</a>
+        </div>
+        <div class="about-pillars">
+          <div class="pillar">
+            <div class="pillar-num">1</div>
+            <div class="pillar-text"><strong>Trust</strong>Built over decades. Never shortcut.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">2</div>
+            <div class="pillar-text"><strong>Execution</strong>Not advisory for its own sake — real outcomes.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">3</div>
+            <div class="pillar-text"><strong>Intelligence</strong>Rigorous thinking, institutional clarity.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">4</div>
+            <div class="pillar-text"><strong>Reach</strong>India to the United States. Binational by design.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERTICALS SECTION -->
+  <section class="verticals-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="label">Core Verticals</span>
+        <h2 class="section-heading">Three areas.<br><em>One institution.</em></h2>
+        <p class="section-body">BlackAce operates across three reinforcing verticals — each strengthening the other through shared relationships, capital and execution capacity.</p>
+      </div>
+      <div class="verticals-grid">
+        <div class="vertical-card" onclick="showPage('finance')">
+          <div class="vertical-num">I</div>
+          <div>
+            <span class="label vertical-label">Vertical 01</span>
+            <div class="vertical-title">Finance &<br>Strategy</div>
+            <div class="vertical-desc">Institutional financial structuring, wealth advisory, cross-border deal origination and high-level strategic engagement.</div>
+            <div class="vertical-practices">
+              <div class="vertical-practice">Financial Structuring & Wealth Management</div>
+              <div class="vertical-practice">Strategic Business Advisory</div>
+              <div class="vertical-practice">Government & Institutional Engagements</div>
+              <div class="vertical-practice">Cross-Border Partnerships</div>
+              <div class="vertical-practice">High-Level Negotiation & Deal Structuring</div>
+            </div>
+          </div>
+          <div class="vertical-arrow">Explore Vertical →</div>
+        </div>
+        <div class="vertical-card" onclick="showPage('infrastructure')">
+          <div class="vertical-num">II</div>
+          <div>
+            <span class="label vertical-label">Vertical 02</span>
+            <div class="vertical-title">Infrastructure</div>
+            <div class="vertical-desc">Large-scale tender structuring, energy advisory, hospitality investments and construction consultancy for sovereign and institutional clients.</div>
+            <div class="vertical-practices">
+              <div class="vertical-practice">Large Scale Tender & Infrastructure</div>
+              <div class="vertical-practice">Energy & Strategic Projects</div>
+              <div class="vertical-practice">Hospitality & Hotel Investments</div>
+              <div class="vertical-practice">Construction Consultancy</div>
+            </div>
+          </div>
+          <div class="vertical-arrow">Explore Vertical →</div>
+        </div>
+        <div class="vertical-card" onclick="showPage('technology')">
+          <div class="vertical-num">III</div>
+          <div>
+            <span class="label vertical-label">Vertical 03</span>
+            <div class="vertical-title">Emerging<br>Technology</div>
+            <div class="vertical-desc">AI governance, responsible AI frameworks and long-term data centre investments — positioned at the infrastructure layer of the AI economy.</div>
+            <div class="vertical-practices">
+              <div class="vertical-practice">Data Centre & Long-Term Strategic Investments</div>
+              <div class="vertical-practice">AI Governance & Responsible AI</div>
+            </div>
+          </div>
+          <div class="vertical-arrow">Explore Vertical →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI STACK -->
+  <section class="aistack-section">
+    <div class="container">
+      <div class="aistack-grid">
+        <div>
+          <span class="label">Our Position in AI</span>
+          <h2 class="section-heading" style="font-size:clamp(28px,3.5vw,42px);">We occupy the <em>infrastructure layer</em> — not the model race.</h2>
+          <p class="section-body" style="margin-top:20px;">BlackAce and our partner firm eRAI together cover the two most consequential layers of the AI economy — infrastructure and applications — without competing in the capital-intensive model layer.</p>
+          <a class="btn-ghost" style="margin-top:32px;" onclick="showPage('technology')" href="#">Emerging Technology →</a>
+        </div>
+        <div class="stack-visual">
+          <div class="stack-layer ours">
+            <div class="stack-layer-num">1</div>
+            <div>
+              <div class="stack-layer-title">Infrastructure Layer</div>
+              <div class="stack-layer-desc">Chips, data centres, compute and energy systems powering AI at scale.</div>
+              <span class="stack-badge">BlackAce</span>
+            </div>
+          </div>
+          <div class="stack-layer not-ours">
+            <div class="stack-layer-num">2</div>
+            <div>
+              <div class="stack-layer-title">Model Layer</div>
+              <div class="stack-layer-desc">Foundation models — OpenAI, Anthropic, Google DeepMind. Not our battleground.</div>
+              <span class="stack-badge muted">Not Our Layer</span>
+            </div>
+          </div>
+          <div class="stack-layer ours">
+            <div class="stack-layer-num">3</div>
+            <div>
+              <div class="stack-layer-title">Applications Layer</div>
+              <div class="stack-layer-desc">AI-powered products and enterprise deployments built on foundation models.</div>
+              <span class="stack-badge">effectivRAI (eRAI)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="roadmap-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="label">Strategic Roadmap</span>
+        <h2 class="section-heading"><em>2026–2028:</em><br>Four priority tracks.</h2>
+        <p class="section-body">BlackAce's first two years are focused on establishing credibility, generating early revenue and building the institutional relationships that underpin long-term relevance.</p>
+      </div>
+      <div class="roadmap-cards">
+        <div class="roadmap-card" data-track="1">
+          <div class="roadmap-track">Track 01</div>
+          <div class="roadmap-title">Infrastructure & Energy Tenders</div>
+          <div class="roadmap-desc">Large-scale tenders, energy advisory and strategic projects across South Asia and emerging markets.</div>
+        </div>
+        <div class="roadmap-card" data-track="2">
+          <div class="roadmap-track">Track 02</div>
+          <div class="roadmap-title">Financial Structuring</div>
+          <div class="roadmap-desc">Institutional capital, deal structuring and capital base development across India and cross-border.</div>
+        </div>
+        <div class="roadmap-card" data-track="3">
+          <div class="roadmap-track">Track 03</div>
+          <div class="roadmap-title">Wealth Management</div>
+          <div class="roadmap-desc">High-net-worth and institutional mandates with long-term wealth advisory at the centre.</div>
+        </div>
+        <div class="roadmap-card" data-track="4">
+          <div class="roadmap-track">Track 04</div>
+          <div class="roadmap-title">Government & Policy Advisory</div>
+          <div class="roadmap-desc">Policy engagement, cross-sector relationship building and India-US institutional bridge.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING CTA -->
+  <section class="contact-strip">
+    <div class="container-sm">
+      <span class="label">Get in Touch</span>
+      <h2 class="contact-heading">If something complex<br>has to be solved —<br><em>trust BlackAce.</em></h2>
+      <p class="contact-sub">We work with governments, institutions, enterprises and sovereign stakeholders. If you have a complex problem, we want to hear about it.</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+        <a class="btn-gold" onclick="showPage('contact')" href="#">Engage Us</a>
+        <a class="btn-ghost" onclick="showPage('about')" href="#">About the Firm</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">Black<span>Ace</span> ♠</div>
+          <div class="footer-tagline">A high-trust strategic institution. New Delhi · Washington D.C. Founded June 2026.</div>
+          <div style="margin-top:20px;font-size:11px;color:var(--muted);">Trust · Execution · Intelligence<br>India ♠ United States</div>
+        </div>
+        <div class="footer-col">
+          <h4>The Firm</h4>
+          <button class="footer-link" onclick="showPage('about')">Overview</button>
+          <button class="footer-link" onclick="showPage('vision')">Vision & Mission</button>
+          <button class="footer-link" onclick="showPage('team')">Our Team</button>
+        </div>
+        <div class="footer-col">
+          <h4>What We Do</h4>
+          <button class="footer-link" onclick="showPage('finance')">Finance & Strategy</button>
+          <button class="footer-link" onclick="showPage('infrastructure')">Infrastructure</button>
+          <button class="footer-link" onclick="showPage('technology')">Emerging Technology</button>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <button class="footer-link" onclick="showPage('insights')">Insights</button>
+          <button class="footer-link" onclick="showPage('contact')">Contact</button>
+          <button class="footer-link" onclick="showPage('contact')">Engage Us</button>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 BlackAce. All rights reserved. Confidential.</div>
+        <div class="footer-spade">♠</div>
+      </div>
+      <div class="footer-legal">
+        BlackAce is a strategic advisory institution registered in India. This website is for informational purposes only and does not constitute financial, legal or investment advice. All figures relating to founding partner track records are cumulative across prior institutional roles. BlackAce is not a registered investment adviser. Institutional engagements are subject to applicable regulations in each jurisdiction.
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: ABOUT
+════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <div class="page-hero">
+    <div class="container-sm">
+      <span class="label page-hero-label">The Firm</span>
+      <h1 class="page-hero-heading">About <em>BlackAce</em></h1>
+      <p class="page-hero-sub">BlackAce is a high-trust strategic institution founded in 2026 — built to solve complex problems at the intersection of capital, infrastructure, technology and sovereign affairs across India and the United States.</p>
+    </div>
+  </div>
+
+  <section class="inner-section">
+    <div class="container-sm">
+      <span class="label">Who We Are</span>
+      <p class="section-body" style="max-width:100%;font-size:18px;color:var(--white);line-height:1.8;">
+        Institutions fail not because opportunities do not exist, but because <strong style="color:var(--gold);">execution, trust and coordination break down</strong>. BlackAce exists to bridge that gap — between vision and execution. We solve complex institutional problems by bringing together capital, strategy, execution and long-term trust in a single, dependable institution.
+      </p>
+      <div class="vision-quote" style="margin-top:48px;">
+        We are not building for valuation. We are building for <em>relevance, resilience and long-term institutional value.</em>
+      </div>
+    </div>
+  </section>
+
+  <section class="inner-section dark">
+    <div class="container-sm">
+      <span class="label">The Founders</span>
+      <div class="founders-intro">
+        <p>BlackAce is founded by <strong>technologists and industrialists</strong> — alumni of Delhi University, Columbia University and Yale University — who have collectively overseen and structured <strong>approximately $9.3 billion USD (~₹79,050 crores INR)</strong> in institutional capital and public programmes. Deeply versed in both the Indian and American systems of governance, finance and policy, the founders are formally recognised as institutional leaders by the governments of <strong>India, the United States, Germany and Morocco</strong>.</p>
+      </div>
+      <div class="founders-grid">
+        <div class="founder-card">
+          <div class="founder-geo">New Delhi, India</div>
+          <div class="founder-photo">[Photo]</div>
+          <div class="founder-name">[Founder Name]</div>
+          <div class="founder-title">Managing Partner — India</div>
+          <div class="founder-bio">[Placeholder: 3–4 sentence biography covering institutional background, expertise, academic credentials and key achievements. To be provided by founding partner.]</div>
+          <div class="founder-tags">
+            <span class="founder-tag">Delhi University</span>
+            <span class="founder-tag">[University]</span>
+            <span class="founder-tag">[Sector Expertise]</span>
+            <span class="founder-tag">[Prior Role]</span>
+          </div>
+        </div>
+        <div class="founder-card">
+          <div class="founder-geo">Washington D.C., USA</div>
+          <div class="founder-photo">[Photo]</div>
+          <div class="founder-name">[Founder Name]</div>
+          <div class="founder-title">Managing Partner — USA</div>
+          <div class="founder-bio">[Placeholder: 3–4 sentence biography covering institutional background, expertise, academic credentials and key achievements. To be provided by founding partner.]</div>
+          <div class="founder-tags">
+            <span class="founder-tag">Columbia University</span>
+            <span class="founder-tag">Yale University</span>
+            <span class="founder-tag">[Sector Expertise]</span>
+            <span class="founder-tag">[Prior Role]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="inner-section">
+    <div class="container-sm">
+      <span class="label">Structure & Geography</span>
+      <p class="section-body" style="max-width:100%;margin-bottom:32px;">BlackAce is built as a dual-country institution — anchored in India, with a full operational and legal presence in the United States. Our American partner firm effectivRAI (eRAI) operates as our US-facing vehicle at the applications layer of AI.</p>
+      <div class="structure-grid">
+        <div class="s-card">
+          <span class="label s-card-label">India</span>
+          <div class="s-card-title">BlackAce India</div>
+          <p>The founding entity. Headquartered in New Delhi, India. Leads institutional relationships, sovereign advisory, infrastructure structuring and financial operations across South Asia and emerging markets.</p>
+        </div>
+        <div class="s-card">
+          <span class="label s-card-label">5–10 Year Vision</span>
+          <div class="s-card-title">BlackAce USA</div>
+          <p>US legal entity, established after India. Enables access to US capital markets, government procurement and cross-border deal flow. Operates in tandem with BlackAce India.</p>
+        </div>
+        <div class="s-card">
+          <span class="label s-card-label">Allied Entity</span>
+          <div class="s-card-title">effectivRAI (eRAI)</div>
+          <p>A <strong>fully American AI applications firm</strong> — 50% co-owned by BlackAce co-founders. eRAI operates at the applications layer of the AI stack and would serve as BlackAce's US-market entry vehicle.</p>
+        </div>
+        <div class="s-card">
+          <span class="label s-card-label">Long-Term</span>
+          <div class="s-card-title">The Merged Institution</div>
+          <p>As BlackAce matures institutionally and establishes a strong India-US operating presence, BlackAce and eRAI can evolve into a closely integrated institution, combining infrastructure and application layer capabilities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="inner-section dark" style="padding-bottom:60px;">
+    <div class="container-sm" style="display:flex;justify-content:center;gap:16px;">
+      <a class="btn-gold" onclick="showPage('vision')" href="#">Vision & Mission</a>
+      <a class="btn-ghost" onclick="showPage('contact')" href="#">Engage Us</a>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: VISION
+════════════════════════════════════════ -->
+<div id="page-vision" class="page">
+  <div class="page-hero">
+    <div class="container-sm">
+      <span class="label page-hero-label">Vision & Mission</span>
+      <h1 class="page-hero-heading">Built for <em>decades,</em><br>not quarters.</h1>
+      <p class="page-hero-sub">BlackAce is not a company. It is a high-trust strategic institution — built to solve complex problems at the highest level of business, finance, infrastructure, technology and sovereign affairs.</p>
+    </div>
+  </div>
+
+  <section class="inner-section">
+    <div class="container-sm">
+      <span class="label">Mission</span>
+      <div class="vision-quote">
+        We exist to bridge the gap between vision and execution — bringing together <em>capital, strategy, execution</em> and long-term trust where institutions need it most.
+      </div>
+      <p class="section-body" style="max-width:100%;">BlackAce operates at the intersection of financial structuring, infrastructure deployment, AI governance and sovereign-level advisory. We combine institutional credibility with genuine execution capacity — the combination that is hardest to find, and most needed at scale.</p>
+    </div>
+  </section>
+
+  <section class="inner-section dark">
+    <div class="container-sm">
+      <span class="label">What We Stand For</span>
+      <p class="section-body" style="max-width:100%;margin-bottom:40px;">Every vertical we build strengthens the others — relationships create opportunities, opportunities create investments, investments build lasting trust and influence. The following four values are not aspirational. They are operational commitments.</p>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-word">Trust</div>
+          <div class="value-desc">Trust takes years to build and moments to lose. Every engagement BlackAce undertakes is held to the standard of an institution whose reputation depends on it — because ours does.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-word">Execution</div>
+          <div class="value-desc">Not advisory for its own sake. Not optics. Real, measurable, documented outcomes for the institutions we serve. If we say we will deliver, we deliver.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-word">Intelligence</div>
+          <div class="value-desc">Rigorous thinking. Deep domain expertise. Pattern recognition across finance, infrastructure, technology and policy — in both the Indian and American systems.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-word">Reach</div>
+          <div class="value-desc">Binational by design. Headquartered in New Delhi, operational in Washington D.C. — BlackAce exists at the intersection of the world's two most consequential democracies.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="inner-section">
+    <div class="container-sm">
+      <span class="label">Long-Term Vision</span>
+      <p class="section-body" style="max-width:100%;font-size:18px;color:var(--white);line-height:1.8;margin-bottom:32px;">
+        We are building a multi-vertical institution — not a single-revenue business. The goal is for BlackAce to become the institution that governments, sovereign funds, infrastructure developers and large enterprises turn to when they need trusted execution, financial clarity, strategic intelligence and institutional problem solving.
+      </p>
+      <p class="section-body" style="max-width:100%;margin-bottom:32px;">
+        Over time, we want BlackAce to contribute meaningfully to the growth, stability and execution capacity of the nations we serve — and to be known, on both sides of the Atlantic, as the institution you call when something complex has to be built, structured or solved properly.
+      </p>
+      <div style="background:var(--card);border-left:3px solid var(--gold);padding:28px 32px;">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;font-style:italic;color:var(--white);line-height:1.5;">
+          "We are not building for valuation. We are building for relevance, resilience and long-term institutional value."
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: TEAM
+════════════════════════════════════════ -->
+<div id="page-team" class="page">
+  <div class="page-hero">
+    <div class="container-sm">
+      <span class="label page-hero-label">Our Team</span>
+      <h1 class="page-hero-heading">The people behind <em>BlackAce</em></h1>
+      <p class="page-hero-sub">Founded by technologists and industrialists with decades of hard-won operational credibility at the highest levels of public and private institutions in India and the United States.</p>
+    </div>
+  </div>
+
+  <section class="inner-section">
+    <div class="container-sm">
+      <span class="label">Founding Partners</span>
+      <div class="founders-grid" style="margin-top:32px;">
+        <div class="founder-card">
+          <div class="founder-geo">New Delhi, India</div>
+          <div class="founder-photo">[Photo]</div>
+          <div class="founder-name">[Founder Name]</div>
+          <div class="founder-title">Managing Partner — India</div>
+          <div class="founder-bio">[Placeholder: Comprehensive biography. Academic background, prior institutional roles, key mandates handled, sector expertise, and recognition. To be provided by founding partner.]</div>
+          <div class="founder-tags">
+            <span class="founder-tag">Delhi University</span>
+            <span class="founder-tag">[University 2]</span>
+            <span class="founder-tag">Finance & Strategy</span>
+            <span class="founder-tag">Infrastructure</span>
+            <span class="founder-tag">[Prior Role]</span>
+          </div>
+        </div>
+        <div class="founder-card">
+          <div class="founder-geo">Washington D.C., USA</div>
+          <div class="founder-photo">[Photo]</div>
+          <div class="founder-name">[Founder Name]</div>
+          <div class="founder-title">Managing Partner — USA</div>
+          <div class="founder-bio">[Placeholder: Comprehensive biography. Academic background, prior institutional roles, key mandates handled, sector expertise, and recognition. To be provided by founding partner.]</div>
+          <div class="founder-tags">
+            <span class="founder-tag">Columbia University</span>
+            <span class="founder-tag">Yale University</span>
+            <span class="founder-tag">Emerging Technology</span>
+            <span class="founder-tag">Policy Advisory</span>
+            <span class="founder-tag">[Prior Role]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="inner-section dark">
+    <div class="container-sm">
+      <span class="label">Advisory Network</span>
+      <p class="section-body" style="max-width:100%;margin-bottom:40px;">BlackAce operates with an extended network of senior advisors and institutional partners across India, the United States, Europe and the Gulf. Details of the advisory board will be published as relationships are formalised.</p>
+      <div class="placeholder">
+        <div class="placeholder-label">Advisory Board</div>
+        <div class="placeholder-hint">Names and profiles to be added as advisors are confirmed</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="inner-section">
+    <div class="container-sm">
+      <span class="label">Join BlackAce</span>
+      <h2 class="section-heading" style="font-size:clamp(28px,3.5vw,42px);">We hire for <em>capability</em><br>and character.</h2>
+      <p class="section-body" style="max-width:100%;margin-top:16px;margin-bottom:32px;">BlackAce is building its founding team. We are looking for people who think institutionally, execute without shortcuts, and understand that trust is built one engagement at a time. If that is you, we want to hear from you.</p>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:40px;">
+        <div class="practice-item">
+          <div>
+            <div class="practice-title">Executive Associate — India</div>
+            <div class="practice-desc">Research, document drafting, CRM management, client coordination. Reporting to Managing Partner India. New Delhi based.</div>
+          </div>
+        </div>
+        <div class="practice-item">
+          <div>
+            <div class="practice-title">Financial Analyst — India</div>
+            <div class="practice-desc">Financial modelling, deal analysis, accounting support. Reporting to Managing Partner India. New Delhi based.</div>
+          </div>
+        </div>
+        <div class="practice-item">
+          <div>
+            <div class="practice-title">Business Development Associate — USA</div>
+            <div class="practice-desc">Pipeline support, US relationship management, eRAI coordination. Reporting to Managing Partner USA. Washington D.C. based.</div>
+          </div>
+        </div>
+      </div>
+      <a class="btn-gold" onclick="showPage('contact')" href="#">Express Interest →</a>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: VERTICALS (OVERVIEW)
+════════════════════════════════════════ -->
+<div id="page-verticals" class="page">
+  <div class="page-hero">
+    <div class="container-sm">
+      <span class="label page-hero-label">What We Do</span>
+      <h1 class="page-hero-heading">Three verticals.<br><em>One institution.</em></h1>
+      <p class="page-hero-sub">Each vertical reinforces the others through shared relationships, capital flows and execution capacity. Together, they make BlackAce a multi-vertical institution — not a single-revenue business.</p>
+    </div>
+  </div>
+  <section class="inner-section">
+    <div class="container">
+      <div class="verticals-grid" style="margin-top:0;">
+        <div class="vertical-card" onclick="showPage('finance')">
+          <div class="vertical-num">I</div>
+          <div>
+            <span class="label vertical-label">Vertical 01</span>
+            <div class="vertical-title">Finance & Strategy</div>
+            <div class="vertical-desc">Institutional financial structuring, wealth advisory, cross-border deal origination and high-level strategic engagement.</div>
+            <div class="vertical-practices">
+              <div class="vertical-practice">Financial Structuring & Wealth Management</div>
+              <div class="vertical-practice">Strategic Business Advisory</div>
+              <div class="vertical-practice">Government & Institutional Engagements</div>
+              <div class="vertical-practice">Cross-Border Partnerships</div>
+              <div class="vertical-practice">High-Level Negotiation & Deal Structuring</div>
+            </div>
+          </div>
+          <div class="vertical-arrow">Explore →</div>
+        </div>
+        <div class="vertical-card" onclick="showPage('infrastructure')">
+          <div class="vertical-num">II</div>
+          <div>
+            <span class="label vertical-label">Vertical 02</span>
+            <div class="vertical-title">Infrastructure</div>
+            <div class="vertical-desc">Large-scale tender structuring, energy advisory, hospitality investments and construction consultancy.</div>
+            <div class="vertical-practices">
+              <div class="vertical-practice">Large Scale Tender & Infrastructure</div>
+              <div class="vertical-practice">Energy & Strategic Projects</div>
+              <div class="vertical-practice">Hospitality & Hotel Investments</div>
+              <div class="vertical-practice">Construction Consultancy</div>
+            </div>
+          </div>
+          <div class="vertical-arrow">Explore →</div>
+        </div>
+        <div class="vertical-card" onclick="showPage('technology')">
+          <div class="vertical-num">III</div>
+          <div>
+            <span class="label vertical-label">Vertical 03</span>
+            <div class="vertical-title">Emerging Technology</div>
+            <div class="vertical-desc">AI governance, responsible AI frameworks and long-term data centre investments.</div>
+            <div class="vertical-practices">
+              <div class="vertical-practice">Data Centre & Long-Term Strategic Investments</div>
+              <div class="vertical-practice">AI Governance & Responsible AI</div>
+            </div>
+          </div>
+          <div class="vertical-arrow">Explore →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: FINANCE & STRATEGY
+════════════════════════════════════════ -->
+<div id="page-finance" class="page">
+  <div class="vertical-hero-bar"></div>
+  <div class="page-hero">
+    <div class="container-sm">
+      <span class="label page-hero-label">Vertical 01</span>
+      <h1 class="page-hero-heading">Finance &<br><em>Strategy</em></h1>
+      <p class="page-hero-sub">Institutional financial structuring, wealth advisory, cross-border deal origination, government engagement and high-level negotiation — the vertical that anchors BlackAce's institutional relationships.</p>
+    </div>
+  </div>
+  <section class="inner-section">
+    <div class="container-sm">
+      <span class="label">The Vertical</span>
+      <p class="section-body" style="max-width:100%;font-size:17px;color:var(--white);line-height:1.8;margin-bottom:40px;">Finance & Strategy is BlackAce's primary vertical — the one through which most institutional relationships are initiated, and through which the other verticals are funded and sustained. It operates at the intersection of capital markets, sovereign relationships and strategic advisory.</p>
+      <div class="practice-list">
+        <div class="practice-item">
+          <div class="practice-icon">₹</div>
+          <div>
+            <div class="practice-title">Financial Structuring & Wealth Management</div>
+            <div class="practice-desc">Structuring institutional-grade financial instruments, fund vehicles and wealth management frameworks for high-net-worth individuals, family offices and institutional investors across India and cross-border.</div>
+          </div>
+        </div>
+        <div class="practice-item">
+          <div class="practice-icon">◈</div>
+          <div>
+            <div class="practice-title">Strategic Business Advisory</div>
+            <div class="practice-desc">End-to-end strategic advisory for large enterprises, institutional stakeholders and sovereign entities — from market entry and growth strategy to institutional restructuring and long-term positioning.</div>
+          </div>
+        </div>
+        <div class="practice-item">
+          <div class="practice-icon">⊕</div>
+          <div>
+            <div class="practice-title">Government & Institutional Engagements</div>
+            <div class="practice-desc">Structured engagement with central and state governments, regulatory bodies and multilateral institutions — facilitating policy alignment, project approvals and institutional partnerships.</div>
+          </div>
+        </div>
+        <div class="practice-item">
+          <div class="practice-icon">⊗</div>
+          <div>
+            <div class="practice-title">Cross-Border Institutional Partnerships</div>
+            <div class="practice-desc">Originating, structuring and closing cross-border institutional partnerships between Indian and international entities — leveraging BlackAce's binational presence and founder networks.</div>
+          </div>
+        </div>
+        <div class="practice-item">
+          <div class="practice-icon">◇</div>
+          <div>
+            <div class="practice-title">High-Level Negotiation & Deal Structuring</div>
+            <div class="practice-desc">Representing institutions in complex, multi-stakeholder negotiations at the highest levels — bringing together financial, legal, political and strategic dimensions into a coherent deal framework.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="inner-section dark">
+    <div class="container-sm">
+      <span class="label">Case Studies & Mandates</span>
+      <div class="placeholder" style="margin-bottom:2px;">
+        <div class="placeholder-label">Case Study Placeholder</div>
+        <div class="placeholder-hint">To be added as mandates are completed and cleared for publication</div>
+      </div>
+      <div class="placeholder">
+        <div class="placeholder-label">Client Testimonial</div>
+        <div class="placeholder-hint">To be added with client permission</div>
+      </div>
+    </div>
+  </section>
+  <section class="inner-section" style="padding:40px 0;">
+    <div class="container-sm" style="display:flex;gap:16px;">
+      <a class="btn-ghost" onclick="showPage('verticals')" href="#">← All Verticals</a>
+      <a class="btn-gold" onclick="showPage('contact')" href="#">Engage This Vertical</a>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: INFRASTRUCTURE
+═══════════════════════════════════
